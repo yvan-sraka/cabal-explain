@@ -1,0 +1,13 @@
+if [[ $# -eq 0 || "$1" == "--help" ]]; then
+    echo -e "Usage: cabal-explain <error-message-code>\n\nDisplays an explanation for the specified Haskell error message code.\n\nOptions:\n  --help\tShow this help message and exit."
+    exit 0
+fi
+
+msg=$(curl --silent "https://raw.githubusercontent.com/haskellfoundation/error-message-index/main/message-index/messages/$1/index.md")
+
+if echo "$msg" | grep -q "404: Not Found"; then
+    echo "Error: message for $1 error code does not exist."
+    exit 1
+fi
+
+echo "$msg" | lowdown -tterm
